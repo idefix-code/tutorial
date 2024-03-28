@@ -8,3 +8,5 @@ In order to use Idefix, you will need
 - git
 - a C++ compiler (clang++, g++)
 - an MPI library compatible with the MPI 3 (e.g. OpenMPI > 4.0)
+
+

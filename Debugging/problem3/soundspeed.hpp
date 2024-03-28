@@ -10,5 +10,5 @@ class SoundSpeed {
  private:
   real h0;                   // disc scale height
   IdefixArray1D<real> Rcoord;// Radius coordinate
-  std::vector<int> np_tot;        // number of points in each direction
+  std::array<int,3> np_tot;        // number of points in each direction
 };

@@ -19,7 +19,7 @@
 
 ## Pre-requisities
 
-This session assumes that you know how to connect and work on the Bigfoot cluster. If not, follow the [tutorial on bigfoot](../../env/README.md).
+This session assumes that you know how to connect and work on the LMU cluster to get access to GPUs. If not, follow the [GPU tutorial](../GettingStarted/RunningOnGPUs.md).
 
 ## Problem1: a CPU segmentation fault
 
@@ -27,7 +27,7 @@ This session assumes that you know how to connect and work on the Bigfoot cluste
 The first problem is a simple 1D shock tube problem. This can be compiled and run *on your laptop*.
 
 ```shell
-cd idefix-days/tutorials/debugging/problem1
+cd idefix-tutorial/Debugging/problem1
 ```
 
 We then configure, compile and run the code
@@ -109,7 +109,7 @@ for(int k = 0; k < d.np_tot[KDIR] ; k++) {
 The second problem is a pure thermal diffusion problem where the gas is kept fixed with 0 velocity. This can be compiled and run *on your laptop*.
 
 ```shell
-cd idefix-days/tutorials/debugging/problem2
+cd idefix-tutorial/Debugging/problem2
 ```
 
 We then configure, compile and run the code
@@ -121,7 +121,7 @@ make -j 8
 
 And this runs beaufiully, congrats!
 
-Now, let's run this on a GPU. First follow the procedure describe in the [environement tutorial](../../env/README.md) to connect to a compute node and set up your environement, then go to the problem2 directory, configure for GPU, compile and run...
+Now, let's run this on a GPU. First follow the procedure describe in the [GPU tutorial](../GettingStarted/RunningOnGPUs.md) to connect to a compute node and set up your environement, clone the idefix-tutorial git repository, then go to the problem2 directory, configure for GPU, compile and run...
 
 ...and?
 
@@ -132,35 +132,15 @@ This is a typical example of a code that runs fine on a cpu but fails on GPU. Th
 As for problem 1, the first step is to enable the debugging in Idefix. To do this, let's call cmake again
 
 ```shell
-cmake $IDEFIX_DIR -DIdefix_DEBUG=ON <$YOUR_TEAM_FLAG>
+cmake $IDEFIX_DIR -DIdefix_DEBUG=ON <$YOUR_GPU_FLAG>
 ```
-where ``<$YOUR_TEAM_FLAG>`` is either ``$AMD_FLAGS`` or ``$NVIDIA_FLAGS``.
+where ``<$YOUR_GPU_FLAG>`` is either ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON`` or ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_PASCAL61=ON`` (depending on your choice of GPU).
 then recompile and run
 ```shell
 make -j 4
 ./idefix
 ```
-At this point, we see that an error occurs in the ``EnforcePeriodic`` method of the ``Boundary`` class. One would have thought that Idefix is more robust than this... but as it turns out, Errors on GPUs are always detected late by the host CPU, so it is *not* the point where the error actually occurs!
-
-The key problem here is that the CPU and the GPU are not synchronized: the CPU keeps sending jobs to the GPU without waiting for each finish. Hence, the GPU is lagging behind, and errors are raised at random places in the CPU code by the GPU.
-
-To fix this, we need to force both the CPU and GPU to stay in sync. This leads to poor performances, but since we're debugging, it's ok.
-
-The easiest way to force CPU and GPU to stay in sync is to use the kernel logging module of [Kokkos Tools](https://github.com/kokkos/kokkos-tools). Luckily, we (the LOC) have already compiled a version of Kokkos tools on the machine you are running on, so you won't have to do it yourself (otherwise, just follow the documentation there).
-
-Kokkos tools are always enabled *at runtime* by setting the environement variable ``KOKKOS_TOOLS_LIBS`` to the path to the tool you want to use. Note that there is no need to recompile!
-
-Here, we're going to use the Kernel logger. The kernel logger forces Kokkos to show which kernel is being launched, where it is, and when it finishes. This forces CPU and GPU to stay in sync by adding ``Kokkos::fence`` at the end of each ``idefix_for``
-
-So in practive, we enable Kokkos tools Kernel logger with
-```shell
-export KOKKOS_TOOLS_LIBS=$KOKKOS_TOOLS_DIR/debugging/kernel-logger/libkp_kernel_logger.so
-```
-and we next run the code
-```shell
-./idefix
-```
-This time, we see that the code complains about what's happening in a kernel named ``InternalBoundary``. The kernel name is the first parameter used in each ``idefix_for``: now you see why it's important to give maningful names!
+At this point, we see that an error occurs in a `idefix_for` loop named ``InternalBoundary`` in the function Boundary::UserDefInternalBoundary. The kernel name is the first parameter used in each ``idefix_for``: now you see why it's important to give maningful names!
 
 This ``idefix_for`` is localised in setup.cpp, so you just have to find it, and possibly fix the problem !
 
@@ -248,18 +228,19 @@ This kind of bug is very common and very hard to track down sometimes. Actually,
 
 ## Problem 4: a low performance bug.
 
-Let's move to problem 4, which is again a planet-disk interraction problem. This can be compiled and run *on your laptop* or on the bigfoot cluster, but let's focus for now on the GPU version on the bigfoot cluster (you can try to do the exercise on your laptop, but you will need to compile Kokkos tools first). First go to the right directory
+Let's move to problem 4, which is again a planet-disk interraction problem. This can be compiled and run *on your laptop* or on the LMU cluster, but let's focus for now on the GPU version on the LMU cluster (you can try to do the exercise on your laptop). First go to the right directory
 
 ```shell
-cd idefix-days/tutorials/debugging/problem4
+cd idefix-tutorial/Debugging/problem4
 ```
 
 We then configure
 ```shell
-cmake $IDEFIX_DIR <$YOUR_TEAM_FLAG>
+cmake $IDEFIX_DIR <$YOUR_GPU_FLAG>
 ```
-where ``<$YOUR_TEAM_FLAG>`` is either ``$AMD_FLAGS`` or ``$NVIDIA_FLAGS``,
-then compile and run
+where ``<$YOUR_GPU_FLAG>`` is either ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON`` or ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_PASCAL61=ON`` (depending on your choice of GPU).
+
+Then compile and run.
 ```shell
 make -j 4
 ./idefix
@@ -270,22 +251,15 @@ In this particular case, we see that we get a few 1e7 cell updates/s on a single
 
 There are several reasons why Idefix could be slower: more complex physics (not quite applicable here), and a too small domain size for each GPU, which is not sufficient to feed all of the computational units of the GPU (reminder: there are 1000s of computational unit in a single V100). Here, the resolution is 1024^2 (more than 1e6 cells), that is equivalent to a 100^3 3D problem. This should be largely sufficient to feed a V100, so we clearly have a problem.
 
-### Tracking down performance issue: profiling with Kokkos
+### Tracking down performance issue: on-the-fly profiling
 
-While there are vendor-specific tools (like Nvidia systems), Idefix seeks portability. It turns out that Kokkos provides its own profiling tools: the space time stack. As usual with Kokkos tools, this is enabled by setting ``KOKKOS_TOOLS_LIBS`` to the path of the compiled space-time-stack library. In our case, this is:
-
-
-```shell
-export KOKKOS_TOOLS_LIBS=$KOKKOS_TOOLS_DIR/profiling/space-time-stack/libkp_space_time_stack.so
-```
-
-That's it, that's all, just re-run the code (no need to compile!), and wait...
+While there are vendor-specific tools (like Nvidia systems), Idefix seeks portability. It turns out that Idefix provides its own profiling tools: the space time stack. To use it, no need to recompile, just add the `-profile` option when you call the executable
 
 ```shell
-./idefix
+./idefix -profile
 ```
 
-Now we you have all of the information about what the code is doing and where it's spending its time. Note *en passant* that the name of the regions is the one provided by ``idfx::pushRegion`` the names of the  "for" and "reduce" are that provided to ``idefix_for`` and ``idefix_reduce``, and finally, the name given to the ``IdefixArray`` constructor is reflected in the ``Kokkos::view::initialization``. So all these strings that are provided in the code turns out really useful!
+Now we you have all of the information about what the code is doing and where it's spending its time. Note *en passant* that the name of the regions is the one provided by ``idfx::pushRegion``. So all these strings that are provided in the code turns out really useful!
 
   From this inspection, can you tell what is the problem?
 
