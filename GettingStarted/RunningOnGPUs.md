@@ -78,4 +78,19 @@ You then simply launch the executable:
 You should see Idefix running and finishing rapidly its computation (you can compare the performances in cell/s to the ones you obtain on your laptop for instance for the same test). 
 Don't forget to log out of the compute node so that others can try! You can check
 
+### Multi-GPUs runs
+
+In principle, Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). However, this requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). At the time of writing, this is not available on the LMU cluster. You can still give it a try:
+
+```shell
+module purge
+module load spack/2023.11
+module load cmake/3.20.2-gcc-11.3.1 cuda/11.8.0 openmpi
+```
+
+Then compile the code adding `-DIdefix_MPI=ON` to the command line. If the compilation succeeds, then you can request a multi-GPU job and run idefix as in (here for 2 GPUs):
+
+```shell
+mpirun -np 2 ./idefix
+```
 
