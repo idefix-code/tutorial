@@ -2,10 +2,24 @@
 
 The idea behind Idefix is to be able to run easily your code on a CPU or a GPU cluster. Here, we will demonstrate how this is done on the LMU cluster.
 
+<!-- toc -->
+
+- [Requirements](#requirements)
+- [Set up the environement](#environement)
+- [First test](#first-tests)
+  - [Configuration/compilation on GPUs](#configuration)
+  - [Running on GPUs](#running)
+  - [Multi-GPU runs](#mpi)
+
+
+<!-- tocstop -->
+
+
 ## Requirements
 
 This tutorial assumes that you have an account on the LMU cluster and that you can log into `login.physik.uni-muenchen.de`.
 
+<a id="environement"></a>
 ## Environement and Code setup
 
 First log into the cluster
@@ -38,7 +52,8 @@ For this first test, we are going to run a simple Orszag-Tang test problem on th
 cd $IDEFIX_DIR/test/MHD/OrszagTang
 ```
 
-### configuring/compiling the code for GPUs using CMAKE
+<a id="configuration"></a>
+### Configuring/compiling the code for GPUs using CMAKE
 
 The code configuration can be a bit tricky. When you're not sure about the options, best is to use `ccmake`, a graphical version of `cmake` to switch on and off the options you need. Here, we know we're going to use either the A40 GPUs 
 or the P5000, and I'm telling you explicitely the flags needed.
@@ -60,6 +75,7 @@ The only difference is in the Kokkos_ARCH option, that tells Idefix's backend `K
 
 Note that compilation for GPUs can take a looooooong time, so it is always recommended to parallelise the compilation with the `-j` option of `make`.
 
+<a id="running"></a>
 ### Running the code on GPUs
 
 In order to run *Idefix* interactively, we must get access to a GPU node on the LMU cluster. If using the A40, this is done through:
@@ -78,6 +94,7 @@ You then simply launch the executable:
 You should see Idefix running and finishing rapidly its computation (you can compare the performances in cell/s to the ones you obtain on your laptop for instance for the same test). 
 Don't forget to log out of the compute node so that others can try! You can check
 
+<a id="mpi"></a>
 ### Multi-GPUs runs
 
 In principle, Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). However, this requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). At the time of writing, this is not available on the LMU cluster. You can still give it a try:

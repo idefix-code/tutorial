@@ -1,23 +1,32 @@
-# idefix-tutorial
-Tutorial series for Idefix
+# Your first steps with Idefix
+
 <!-- toc -->
 
-- [Download:](#download)
-- [Installation:](#installation)
-- [Compile an example:](#compile-an-example)
+- [About this tutorial](#about)
+- [Installation](#installation)
+- [Compilation](#compilation)
 - [Running](#running)
-  * [serial (gpu/cpu), openMP (cpu)](#serial-gpucpu-openmp-cpu)
-  * [With MPI (cpu)](#with-mpi-cpu)
-  * [With MPI (gpu)](#with-mpi-gpu)
-- [Profiling](#profiling)
-- [Debugging](#debugging)
-- [Code Validation](#code-validation)
-- [Contributing](#contributing)
+- [Code Validation](#validation)
+- [Run in parallel with MPI](#mpi)
+- [Next tutorial: your first setup](#next)
 
 <!-- tocstop -->
+<a id="about"></a>
+# About this tutorial
 
-Download:
----------
+In this tutorial, you will learn how to use idefix on various architectures.
+Some of the exercises involve Jupyer notebook and source code extracts. It is therefore recommended to clone this tutorial on your machine, so that you can directly use these source files and test what you are doing. In the directory of your choice:
+
+```shell
+git clone https://github.com/glesur/idefix-tutorial.git
+git checkout LMU
+```
+
+The last line allows you to get the LMU-specific tutorial.
+
+# Basic setup
+<a id="installation"></a>
+## Download and install Idefix
 
 Assuming you want to use https to get idefix (easiest option):
 
@@ -28,25 +37,22 @@ cd idefix
 
 This will create and deploy Idefix in the directory `idefix`.
 
-Installation:
--------------
 
-Set the `IDEFIX_DIR` environment variable to the absolute path of the directory
+For conveniance, set the `IDEFIX_DIR` environment variable to the absolute path of the root directory of idefix. Assuming you have not changed directory:
 
 ```shell
-export IDEFIX_DIR=<idefix main folder>
+export IDEFIX_DIR=$PWD
 ```
 
-Add this line to `~/.<shell_rc_file>` for a permanent install.
 
+<a id="compilation"></a>
+## Compile an example
 
-Compile an example:
--------------------
 Go to the example directory.
 For instance:
 
 ```shell
-cd test/HD/sod
+cd $IDEFIX_DIR/test/HD/sod
 ```
 
 Configure the code launching cmake (version >= 3.16) in the example directory:
@@ -63,19 +69,18 @@ One can then compile the code:
 make -j8
 ```
 
-Running
--------------------
-### serial (gpu/cpu), openMP (cpu)
-simple launch the executable
+<a id="running"></a>
+## Run an example
+
+launch the executable
 
 ```shell
 ./idefix
 ```
 
 You should see idefix finishing successfully.
-
-Code Validation
----------------
+<a id="validation"></a>
+## Code Validation
 
 Most of tests provided in the `test/` directory can be validated against analytical solution (standard test)
 and/or pre-computed solutions (non-regression tests). Note that the validation relies on large reference
@@ -95,27 +100,31 @@ We now go back to the location where we ran our first test, and check that the s
 
 ```sell
 cd $IDEFIX_DIR/test/HD/sod
-./testme.py -all
+./testme.py -check
 ```
 
-Tests require Python 3 along with some third party dependencies to be installed.
-To install those deps, run
-```shell
-pip install -r test/python_requirements.txt
-```
+> :warning: **If you are using a Mac with an ARM cpu (M1/M2)**: The non-regression test might not succeed (but standard tests should always pass): this is linked to slight differences in the way roundoff errors are treated on these architectures.
+<a id="mpi"></a>
+## Run in parallel with MPI
 
-### With MPI (cpu)
-`-dec` can be used to specify a domain decomposition manually.
+Note: This section requires an MPI library on your machine.
 
-It can be omitted for 1D problems, or if `NX`, `NY`, `NZ` and `nproc` are **all** powers of 2.
-Otherwise, `-dec` is mandatory. For instance, in 2D, using a 2x2 domain decomposition:
+In order to use Idefix with parallel domain decomposition (either on CPUs or on GPUs), you should first configure the code with MPI enabled using the `Idefix_MPI=ON` option. Let's try that for the Orszag-Tang vortex test
 
 ```shell
-mpirun -np 4 ./idefix -dec 2 2
+cd $IDEFIX_DIR/test/MHD/OrszagTang
+cmake $IDEFIX_DIR -DIdefix_MPI=ON
+make -j 8
 ```
 
-or in 3D, using a 1x2x4 decomposition:
+if your build is successful, you can now try to launch idefix with automatic domain decomposition:
 
 ```shell
-mpirun -np 8 ./idefix -dec 1 2 4
+mpirun -np 4 ./idefix
 ```
+
+<a id="next"></a>
+# What next?
+
+Try to make your own setup.
+
