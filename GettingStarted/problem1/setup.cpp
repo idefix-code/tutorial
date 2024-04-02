@@ -1,7 +1,7 @@
 #include "idefix.hpp"
 #include "setup.hpp"
 
-namespace Setup {
+namespace SetupVariables {
   real flowVelocity;
 }
 
@@ -14,7 +14,7 @@ Setup::Setup(Input &input, Grid &grid, DataBlock &data, Output &output) {
   // read the flow velocity parameter from the input file
   // and store it in the global variable flowVelocity
 
-  Setup::flowVelocity = input.Get// !!TBF //
+  SetupVariables::flowVelocity = input.Get// !!TBF //
 }
 
 
