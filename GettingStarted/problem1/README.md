@@ -32,7 +32,7 @@ This is typically done in the setup constructor (`Setup::Setup` in setup.cpp), u
 ## Define your initial conditions
 
 Our last task is to define our initial conditions. This is done in the `Setup::InitFlow` method. We have already
-prepared a loop on the domain for you, so you just have to fill the holes, knowing that $v_x=$ flowVelocity when $y>y_{\rm interface}$ and $v_x=-$ flowVelocity when $y<y_{\rm interface}$. Here again, the [documentation](https://idefix.readthedocs.io/latest/reference/setup.cpp.html#setup-initflow-method) might help. 
+prepared a loop on the domain for you, so you just have to fill the holes, knowing that $v_x=$ flowVelocity when $y\gt y_{\rm interface}$ and $v_x=-$ flowVelocity when $y\lt y_{\rm interface}$. Here again, the [documentation](https://idefix.readthedocs.io/latest/reference/setup.cpp.html#setup-initflow-method) might help. 
 
 ## Configure the code, build and run it
 
