@@ -35,11 +35,13 @@ git clone --recurse-submodules https://github.com/idefix-code/idefix.git idefix
 export IDEFIX_DIR=$PWD/idefix
 ```
 
-We then load the environement required by Idefix: cmake and Cuda (we will be using Nvidia GPU, so Cuda is needed). 
+We then load the environement required by Idefix: cmake and Cuda (we will be using Nvidia GPU, so Cuda is needed). Add the openmpi module if you want to use multiple GPUs in parallel.
 
+<a id="modules"></a>
 ```shell
-module load spack/2023.11
-module load cmake/3.20.2-gcc-11.3.1 cuda/11.8.0
+module load spack/2024.04
+module load cmake/3.20.2-gcc-11.4.1 cuda/11.8.0 
+module load openmpi/5.0.0-gcc-11.4.1-cuda11.8
 ```
 
 and we're good to go!
@@ -92,20 +94,19 @@ You then simply launch the executable:
 ```
 
 You should see Idefix running and finishing rapidly its computation (you can compare the performances in cell/s to the ones you obtain on your laptop for instance for the same test). 
-Don't forget to log out of the compute node so that others can try! You can check
+Don't forget to log out of the compute node so that others can try! 
 
 <a id="mpi"></a>
 ### Multi-GPUs runs
 
-In principle, Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). However, this requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). At the time of writing, this is not available on the LMU cluster. You can still give it a try:
+In principle, Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). This requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). If you have loaded the openmpi module [suggested above](module), you should be able to compile a GPU version of Idefix with parallelisation support.
+
+You should compile the code adding `-DIdefix_MPI=ON` to the command line. If the compilation succeeds, then you can request a multi-GPU job and run idefix as in (here for 2 GPUs):
 
 ```shell
-module purge
-module load spack/2023.11
-module load cmake/3.20.2-gcc-11.3.1 cuda/11.8.0 openmpi
+cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON -DIdefix_MPI=ON
+make -j 8
 ```
-
-Then compile the code adding `-DIdefix_MPI=ON` to the command line. If the compilation succeeds, then you can request a multi-GPU job and run idefix as in (here for 2 GPUs):
 
 ```shell
 mpirun -np 2 ./idefix
