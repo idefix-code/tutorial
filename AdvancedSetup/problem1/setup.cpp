@@ -12,8 +12,10 @@ void MySoundSpeed(DataBlock &data, const real t, IdefixArray3D<real> &cs) {
   IdefixArray1D<real> x1 = data.x[IDIR]; // NB: this is a shallow copy, it doesn't copy the data contained in the array, juste the "pointer"
   real h0 = SetupVariables::h0;
   // Loop on the full domain
-  // Here should come an idefix_for loop on the whole domain with indices (i,j,k).
-    {
+  // Here should come an idefix_for loop on the whole domain.
+
+  // The idefix for should execute this kernel on each element of the array cs (=soundspeed)
+    KOKKOS_LAMBDA (int k, int j, int i) {
       real R = x1(i);
       cs(k,j,i) = // ## TBF ##
     }
