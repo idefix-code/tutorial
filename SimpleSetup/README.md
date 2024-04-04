@@ -12,7 +12,7 @@ Every idefix setup is divided into 3 files: definitions.hpp, idefix.ini and setu
 This problems proposes to set up a simple Kelvin Helmholtz instability flow that consist of two layers of fluid moving in opposite directions.
 
  
- ![alt text](flowScheme.png)
+ ![alt text](img/flowScheme.png)
 
 The interface is designed with a weak initial perturbation that will grow because of the Kelvin-Hemholtz instability. We will assume the flow is periodic in $x$ and we will use outflow (i.e. non-reflective) boundary conditions in the $y$ and $z$ direction.
 
@@ -36,7 +36,7 @@ prepared a loop on the domain for you, so you just have to fill the holes, knowi
 
 ## Configure the code, build and run it
 
-Follow the instruction in the [Getting Started](../README.md#compile-an-example) section. 
+Follow the instruction in the [Getting Started](../GettingStarted/README.md#compile-an-example) section. 
 
 ## Check the outputs
 
@@ -48,9 +48,9 @@ python3 read_problem.py 5
 
 Note that a new vtk file is produced every $\Delta t=1.0$ (in code units), so you can easily see how the flow evolves with time. You should see a nice vortex alley developping in the simulation, particularly visible in the vertical vorticity $\omega_z=\partial_x v_y-\partial_y v_x$ field.
 
-![text](../solution1/solution.png)
+![text](img/solution.png)
 
 ## Play with your setup
 
 Now, you can increase (without recompiling!) the flow speed beyond the sound speed (here =1.0 in the setup)
-to see the effect on compressibility. You can also try to use [parallelism with MPI](../README.md#run-in-parallel-with-mpi) to speed up the computation
+to see the effect on compressibility. You can also try to use [parallelism with MPI](../GettingStarted/README.md#run-in-parallel-with-mpi) to speed up the computation
