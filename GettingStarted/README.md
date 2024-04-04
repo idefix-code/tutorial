@@ -126,5 +126,7 @@ mpirun -np 4 ./idefix
 <a id="next"></a>
 # What next?
 
-Try to make your own setup.
+Try to [run the code on GPUs](RunningOnGPUs)
+
+Try to [make your own setup](../SimpleSetup/README.md).
 
