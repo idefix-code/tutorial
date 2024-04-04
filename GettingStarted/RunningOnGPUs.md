@@ -101,7 +101,7 @@ Don't forget to log out of the compute node so that others can try!
 
 In principle, Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). This requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). If you have loaded the openmpi module [suggested above](module), you should be able to compile a GPU version of Idefix with parallelisation support.
 
-You should compile the code adding `-DIdefix_MPI=ON` to the command line. If the compilation succeeds, then you can request a multi-GPU job and run idefix as in (here for 2 GPUs):
+You should compile the code adding `-DIdefix_MPI=ON` to the command line. If the compilation succeeds, then you can request a multi-GPU job (ask your administrator) and run idefix as in (here for 2 GPUs):
 
 ```shell
 cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON -DIdefix_MPI=ON
