@@ -1,16 +1,13 @@
 # Introduction
 
 
-These tutorials requires Python 3.8 or newer.
-
-Both tutorials include requirement files. It is strongly advised to create virtual
-environments before installing anything specifically for these tutorials. To get
-started, navigate to a tutorial's subdirectory
+These tutorials requires Python 3.8 or newer, plus a few additional packages. It is strongly advised to create a virtual
+environment before installing anything specifically for these tutorials. To get
+started, navigate to the tutorial subdirectory
 
 ```shell
-$ cd idefix-tutorials/VisualisationAndPost/<dir>
+$ cd idefix-tutorial/VisualisationAndPost/
 ```
-(where `<dir>` is `readVTK` or `nonos`)
 
 and create a virtual environment...
 
@@ -19,7 +16,7 @@ and create a virtual environment...
 $ conda create --name=<name> python=3.10
 $ conda activate <name>
 ```
-(`<name>` is a placeholder, for instance `nonos_tuto`, and the Python version is
+(`<name>` is a placeholder, for instance `idefix_tuto`, and the Python version is
 indicative)
 
 ... or with `venv`
