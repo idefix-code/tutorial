@@ -13,16 +13,16 @@ and create a virtual environment...
 
 ... with conda
 ```shell
-$ conda create --name=<name> python=3.10
-$ conda activate <name>
+conda create --name=<name> python=3.10
+conda activate <name>
 ```
 (`<name>` is a placeholder, for instance `idefix_tuto`, and the Python version is
 indicative)
 
 ... or with `venv`
 ```shell
-$ python -m venv .venv
-$ source .venv/bin/activate
+python -m venv env
+source env/bin/activate
 ```
 
 Then proceed to install requirements
@@ -55,5 +55,5 @@ $ conda remove --all --name <name>
 
 or with `venv`
 ```shell
-$ rm -fr .venv
+$ rm -fr env
 ```

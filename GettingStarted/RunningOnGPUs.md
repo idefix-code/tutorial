@@ -112,4 +112,4 @@ and run idefix as in (here for 2 GPUs):
 srun -n 2 ./idefix
 ```
 
-Note that in order to get optimum performances, special network configuration may be required, such as NVLink, to limit the overhead induced by inter-GPU communications.
+Note that in order to get optimum performances, specific network hardware may be required, such as NVLink or Slingshot, to limit the overhead induced by inter-GPU communications.

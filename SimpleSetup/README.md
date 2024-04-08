@@ -1,5 +1,13 @@
 
-# The 3 main idefix files
+# What is an idefix setup?
+
+Idefix consist of its main trunk (that you downloaded from github, located in `$IDEFIX_DIR/src`) and a user-specified setup, made of at least 3 files (see below). An idefix setup can be located anywhere on your disk. When we will configure and build idefix, we will do it *from the setup directory*. Hence, the main idefix trunk will be built against your setup, and an executable file will be created in your setup directory. Therefore, all of your coding, configuration, compilation and runs should happen in the setup directories proposed in this tutorial.
+
+In principle, there is *no need* to modify your idefix main trunk, and in particular in this tutorial, it will be left untouched. This separation between the user setup, and the idefix sources limits the risk that you break something fundamental in idefix. Moreover, it simplifies updates, as you just have to `git pull` new versions of idefix in `$IDEFIX_DIR`.
+
+For those familiar with the Pluto code, they should feel at home. Indeed, Idefix has been designed to simplify portability from Pluto, so several design features are recovered in idefix. Still, keep in mind that Pluto and Idefix are not the same code, even though they share several user-space properties.
+
+## The 3 main files of an idefix setup
 
 Every idefix setup is divided into 3 files: definitions.hpp, idefix.ini and setup.cpp.  Let's see what contains each file:
 
@@ -16,7 +24,7 @@ This problems proposes to set up a simple Kelvin Helmholtz instability flow that
 
 The interface is designed with a weak initial perturbation that will grow because of the Kelvin-Hemholtz instability. We will assume the flow is periodic in $x$ and we will use outflow (i.e. non-reflective) boundary conditions in the $y$ and $z$ direction.
 
-In this problem, we have left some holes that you will have to fill with the documentation. These are identified by `## TBF ##` or `//TBF// in the source code.
+In this problem, we have left some holes that you will have to fill with the documentation. These are identified by `## TBF ##` or `//TBF//` in the source code.
 
 # Your work
 ## Define the boundary conditions
@@ -25,7 +33,7 @@ In this setup, we want periodic boundary conditions in the $x$ direction, and ou
 
 ## Read the flow velocity from idefix.ini
 
-In this setup, we want to vary the flow velocity without recompiling the code. Idefix allows you to define as many blocks and parameters as you wish. Here, we have defined a block `[Setup]` with our parameter `flowVelocity`. We should now fetch this parameter in our `setup.cpp` code.
+In this setup, we want to vary the flow velocity without recompiling the code. Idefix allows you to define as many blocks and parameters as you wish in your input file (.ini). Here, we have defined a block `[Setup]` with our parameter `flowVelocity`. We should now fetch this parameter in our `setup.cpp` code.
 
 This is typically done in the setup constructor (`Setup::Setup` in setup.cpp), using the `Get` method that belongs to the `Input` class. Have a look at the [example](https://idefix.readthedocs.io/latest/reference/setup.cpp.html#example) provided in the user guide, and at the [documentation of the `Input::Get` method](https://idefix.readthedocs.io/latest/programmingguide.html#the-input-class) in the programming guide.
 
