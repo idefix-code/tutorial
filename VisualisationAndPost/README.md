@@ -6,7 +6,7 @@ environment before installing anything specifically for these tutorials. To get
 started, navigate to the tutorial subdirectory
 
 ```shell
-$ cd idefix-tutorial/VisualisationAndPost/
+cd idefix-tutorial/VisualisationAndPost/
 ```
 
 and create a virtual environment...
@@ -27,7 +27,7 @@ source env/bin/activate
 
 Then proceed to install requirements
 ```shell
-$ python -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ### Cleaning the mess
@@ -39,21 +39,21 @@ disk ! Here's how to.
 
 on conda
 ```shell
-$ conda deactivate
+conda deactivate
 ```
 
 or with `venv`
 ```shell
-$ source deactivate
+source deactivate
 ```
 
 #### Remove the virtual env
 with conda
 ```shell
-$ conda remove --all --name <name>
+conda remove --all --name <name>
 ```
 
 or with `venv`
 ```shell
-$ rm -fr env
+rm -fr env
 ```
