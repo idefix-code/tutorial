@@ -1,7 +1,7 @@
 # Idefix paraview tutorial
 
 This tutorial will be done in presentation mode. To reproduce what is being done
-in this presentation, you will need paraview>5.8 and the idefix dataset available following [this link](https://filesender.renater.fr/?s=download&token=fead5091-7308-4252-ba3c-8d740b40695a).
+in this presentation, you will need paraview>5.8 and the idefix dataset available following [this link](https://filesender.renater.fr/?s=download&token=fead5091-7308-4252-ba3c-8d740b40695a). The pdf of the presentation is [available here](slides.pdf).
 
 In addition, you will need the following formula for Paraview calculator that you can directly copy/paste from this document:
 

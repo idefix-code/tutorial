@@ -1,4 +1,4 @@
-# Introduction to nonos
+# Introduction to readVTK
 
 ## Requirements
 See [requirements](../README.md)
@@ -6,5 +6,5 @@ See [requirements](../README.md)
 ## Getting started
 Open the jupyter notebook.
 ```shell
-jupyter lab Intro_to_nonos.ipynb
+jupyter lab Direct_VTK_visualisation.ipynb
 ```
