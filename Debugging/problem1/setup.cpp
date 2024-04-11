@@ -28,9 +28,9 @@ void Setup::InitFlow(DataBlock &data) {
     DataBlockHost d(data);
 
 
-    for(int k = 0; k < d.np_tot[KDIR] ; k++) {
-        for(int j = 0; j < d.np_tot[JDIR] ; j++) {
-            for(int i = 0; i < d.np_tot[IDIR] ; i++) {
+    for(int k = 0; k <= d.np_tot[KDIR] ; k++) {
+        for(int j = 0; j <= d.np_tot[JDIR] ; j++) {
+            for(int i = 0; i <= d.np_tot[IDIR] ; i++) {
 
                 d.Vc(RHO,k,j,i) = (d.x[IDIR](i)>HALF_F) ? 0.125 : 1.0;
                 d.Vc(VX1,k,j,i) = ZERO_F;
