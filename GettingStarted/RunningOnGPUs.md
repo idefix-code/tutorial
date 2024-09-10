@@ -1,6 +1,6 @@
 # Running on a GPU
 
-The idea behind Idefix is to be able to run easily your code on a CPU or a GPU cluster. Here, we will demonstrate how this is done on the LMU cluster.
+The idea behind Idefix is to be able to run easily your code on a CPU or a GPU cluster. Here, we will demonstrate how this is done on the Jureca cluster in Germany.
 
 <!-- toc -->
 
@@ -17,7 +17,7 @@ The idea behind Idefix is to be able to run easily your code on a CPU or a GPU c
 
 ## Requirements
 
-This tutorial assumes that you have an account on the LMU cluster and that you can log into `login.physik.uni-muenchen.de`.
+This tutorial assumes that you have an account on the Jureca cluster and that you can log into `jureca.fz-juelinch.de`.
 
 <a id="environement"></a>
 ## Environement and Code setup
@@ -25,7 +25,7 @@ This tutorial assumes that you have an account on the LMU cluster and that you c
 First log into the cluster
 
 ```shell
-ssh cluster-el9.hpc.physik.uni-muenchen.de
+ssh yourlogin@jureca.fz-juelinch.de
 ```
 
 Then clone idefix. For this, we will put the code into a directory of your choice `<your_favourire_directory>`:
@@ -39,16 +39,14 @@ We then load the environement required by Idefix: cmake and Cuda (we will be usi
 
 <a id="modules"></a>
 ```shell
-module load spack/2024.04
-module load cmake/3.20.2-gcc-11.4.1 cuda/11.8.0 
-module load openmpi/5.0.0-gcc-11.4.1-cuda11.8
+ module load Stages/2024 GCC/12.3.0 CUDA OpenMPI MPI-settings/CUDA CMake
 ```
 
 and we're good to go!
 
 ## First tests
 
-For this first test, we are going to run a simple Orszag-Tang test problem on the GPU. First cd to the right directory
+For this first test, we are going to run a simple Orszag-Tang test problem on a single GPU. First cd to the right directory
 
 ```shell
 cd $IDEFIX_DIR/test/MHD/OrszagTang
@@ -57,21 +55,14 @@ cd $IDEFIX_DIR/test/MHD/OrszagTang
 <a id="configuration"></a>
 ### Configuring/compiling the code for GPUs using CMAKE
 
-The code configuration can be a bit tricky. When you're not sure about the options, best is to use `ccmake`, a graphical version of `cmake` to switch on and off the options you need. Here, we know we're going to use either the A40 GPUs 
-or the P5000, and I'm telling you explicitely the flags needed.
-
-For the A40 GPUs, you should configure and compile Idefix with:
+The code configuration can be a bit tricky. When you're not sure about the options, best is to use `ccmake`, a graphical version of `cmake` to switch on and off the options you need. Here, we know we're going to use 
+the Ampere A100 GPUs, so the flags should be
 
 ```shell
-cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON
+cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON
 make -j 8
 ```
 
-For the P5000, you should do instead:
-```shell
-cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_PASCAL61=ON
-make -j 8
-```
 
 The only difference is in the Kokkos_ARCH option, that tells Idefix's backend `Kokkos` to compile for that specific type of GPU. It is always possible to run Idefix compiled for an older architecture (Pascal) on a new one (Ampere), you will only get a warning: `running kernels compiled for compute capability 6.1 on device with compute capability 8.6 , this will likely reduce potential performance.`. The opposite however doesn't work, if you try you will get an error message `Kokkos::Cuda::initialize ERROR: likely mismatch of architecture`
 
@@ -80,17 +71,17 @@ Note that compilation for GPUs can take a looooooong time, so it is always recom
 <a id="running"></a>
 ### Running the code on GPUs
 
-In order to run *Idefix* interactively, we must get access to a GPU node on the LMU cluster. If using the A40, this is done through:
+In order to run *Idefix* interactively, we must get access to a GPU node. To get access to an accelerated node:
 
 ```shell
-intjob --gres=gpu:a40 --time=0:05:0
+salloc -p dc-gpu --nodes=1 --gres=gpu:1 --time=0:10:0 -A <budget>
 ```
-which gives you a 5 minutes slot on a A40 GPU node. For the p5000, replace `a40` by `p5000`.
+which gives you a 10 minutes slot on one GPU on the account `<budget>` (to be replaced by your own project)
 
-You then simply launch the executable:
+You then simply launch the executable using srun:
 
 ```shell
-./idefix
+srun ./idefix
 ```
 
 You should see Idefix running and finishing rapidly its computation (you can compare the performances in cell/s to the ones you obtain on your laptop for instance for the same test). 
@@ -99,17 +90,17 @@ Don't forget to log out of the compute node so that others can try!
 <a id="mpi"></a>
 ### Multi-GPUs runs
 
-Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). This requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). If you have loaded the openmpi module [suggested above](module), you should be able to compile a GPU version of Idefix with parallelisation support.
+Idefix can run on multiple GPUs (it's been tested on +4000 GPUs simultaneously). This requires an MPI installation compatible with Cuda (e.g. GPU-aware OpenMPI). If you have loaded the openmpi module [suggested above](modules), you should be able to compile a GPU version of Idefix with parallelisation support.
 
-You should configure the code adding `-DIdefix_MPI=ON` to the command line and compile. If the compilation succeeds, then you can request a multi-GPU job (here a 2 GPUs job):
+You should configure the code with CMake adding `-DIdefix_MPI=ON` to the command line and compile. If the compilation succeeds, then you can request a multi-GPU job (here a 8 GPUs job, on 2 nodes with 4 GPUs/nodes):
 
 ```shell
-salloc --ntasks-per-node=2 --nodes=1 --gres=gpu:a40:2 --partition=cip --mem=10G --time=00:05:00
+salloc -p dc-gpu --nodes=2 --gres=gpu:4 --time=0:10:0 -A <account>
 ```
 and run idefix as in (here for 2 GPUs):
 
 ```shell
-srun -n 2 ./idefix
+srun -n 8 ./idefix
 ```
 
-Note that in order to get optimum performances, specific network hardware may be required, such as NVLink or Slingshot, to limit the overhead induced by inter-GPU communications.
+Note that with the module configuration we used above, the code automatically uses NVLink when available and Cuda-Aware MPI (i.e. direct GPU-GPU communications).

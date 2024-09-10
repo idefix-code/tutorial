@@ -18,11 +18,10 @@ In this tutorial, you will learn how to use idefix on various architectures.
 Some of the exercises involve Jupyer notebook and source code extracts. It is therefore recommended to clone this tutorial on your machine, so that you can directly use these source files and test what you are doing. In the directory of your choice:
 
 ```shell
-git clone https://github.com/glesur/idefix-tutorial.git
-git checkout LMU
+git clone https://github.com/idefix-code/idefix-tutorial.git
+git checkout Jureca
 ```
-
-The last line allows you to get the LMU-specific tutorial.
+The last line allows you to reach the dedicated tutorial for Jureca.
 
 # Basic setup
 <a id="installation"></a>
