@@ -52,8 +52,6 @@ void Setup::InitFlow(DataBlock &data) {
         }
 
         dataHost.Vc(VX2,k,j,i) = 0.0;
-        dataHost.Vc(VX3,k,j,i) = 0.0;
-
       }
     }
   }

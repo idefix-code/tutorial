@@ -44,7 +44,6 @@ void Setup::InitFlow(DataBlock &data) {
 
         dataHost.Vc(VX1,k,j,i) = // !!TBF //
         dataHost.Vc(VX2,k,j,i) = // !!TBF //
-        dataHost.Vc(VX3,k,j,i) = // !!TBF //
 
       }
     }
