@@ -19,7 +19,7 @@
 
 ## Pre-requisities
 
-This session assumes that you know how to connect and work on the LMU cluster to get access to GPUs. If not, follow the [GPU tutorial](../GettingStarted/RunningOnGPUs.md).
+This session assumes that you know how to connect and work on the Jureca cluster to get access to GPUs. If not, follow the [GPU tutorial](../GettingStarted/RunningOnGPUs.md).
 
 ## Problem1: a CPU segmentation fault
 
@@ -132,9 +132,8 @@ This is a typical example of a code that runs fine on a cpu but fails on GPU. Th
 As for problem 1, the first step is to enable the debugging in Idefix. To do this, let's call cmake again
 
 ```shell
-cmake $IDEFIX_DIR -DIdefix_DEBUG=ON <$YOUR_GPU_FLAG>
+cmake $IDEFIX_DIR -DIdefix_DEBUG=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON
 ```
-where ``<$YOUR_GPU_FLAG>`` is either ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON`` or ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_PASCAL61=ON`` (depending on your choice of GPU).
 then recompile and run
 ```shell
 make -j 4
@@ -228,7 +227,7 @@ This kind of bug is very common and very hard to track down sometimes. Actually,
 
 ## Problem 4: a low performance bug.
 
-Let's move to problem 4, which is again a planet-disk interraction problem. This can be compiled and run *on your laptop* or on the LMU cluster, but let's focus for now on the GPU version on the LMU cluster (you can try to do the exercise on your laptop). First go to the right directory
+Let's move to problem 4, which is again a planet-disk interraction problem. This can be compiled and run *on your laptop* or on the Jureca cluster, but let's focus for now on the GPU version on the Jureca cluster (you can try to do the exercise on your laptop). First go to the right directory
 
 ```shell
 cd idefix-tutorial/Debugging/problem4
@@ -236,9 +235,8 @@ cd idefix-tutorial/Debugging/problem4
 
 We then configure
 ```shell
-cmake $IDEFIX_DIR <$YOUR_GPU_FLAG>
+cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON
 ```
-where ``<$YOUR_GPU_FLAG>`` is either ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE86=ON`` or ``-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_PASCAL61=ON`` (depending on your choice of GPU).
 
 Then compile and run.
 ```shell
