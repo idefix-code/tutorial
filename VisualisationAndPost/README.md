@@ -6,7 +6,7 @@ environment before installing anything specifically for these tutorials. To get
 started, navigate to the tutorial subdirectory
 
 ```shell
-cd idefix-tutorial/VisualisationAndPost/
+cd tutorial/VisualisationAndPost/
 ```
 
 and create a virtual environment...
