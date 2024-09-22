@@ -42,7 +42,7 @@ The domain extends from $0$ to `data.np_tot[IDIR]` in the x1 direction, $0$ to `
 ### Fill the cs(k,j,i) array and compile
 Next, you should fill the array `cs(k,j,i)` with the expression we want for the sound speed. This will be the core of your "compute kernel", i.e. the code that will be effectively executed by the device. Here, and very often in idefix, this kernel is defined as a `KOKKOS_LAMBDA`, which is a simple, inlined way to define a function to be executed by the device. 
 
-At this point, you can try to configure and compile the code, and it should build properly. However, if you run it, you will get an error message. The reason is simple: we have defined a function to compute the sound speed array, we have told idefix that we were going to use a user-defined function, but we have not said *where* was this function! This is the role played by enrollment.
+At this point, you can try to configure (`cmake $IDEFIX_DIR`) and compile the code (`make -j 8`), and it should build properly. However, if you run it, you will get an error message. The reason is simple: we have defined a function to compute the sound speed array, we have told idefix that we were going to use a user-defined function, but we have not said *where* was this function! This is the role played by enrollment.
 
 ### Function enrollment
 
@@ -52,7 +52,7 @@ Enrollment is usually done in the Setup constructor. Since we have created a fun
 
 ### First visualisation of your result
 
-The code will integrate the equations of motion for 3 orbital period at R=1. You can visualize the flow with paraview, or with the provided python script `read_problem.py` to see the flow after 1 orbit, simply type
+The code will integrate the equations of motion for 3 orbital period at R=1. You can visualize the flow with paraview, with the notebook `read_problem.ipynb` or with the provided python script `read_problem.py`. To see the flow after 1 orbit with the latter, simply type
 ```shell
 python3 read_problem.py 1
 ```
