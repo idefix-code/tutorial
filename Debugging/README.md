@@ -24,10 +24,10 @@ This session assumes that you know how to connect and work on the Jureca cluster
 ## Problem1: a CPU segmentation fault
 
 ### Base run
-The first problem is a simple 1D shock tube problem. This can be compiled and run *on your laptop*.
+The first problem is a simple 1D shock tube problem. This can be compiled and run on your laptop or on Jureca.
 
 ```shell
-cd idefix-tutorial/Debugging/problem1
+cd $IDEFIX_ROOT/tutorial/Debugging/problem1
 ```
 
 We then configure, compile and run the code
@@ -55,21 +55,6 @@ make -j 8
 
 As you can see, `Idefix_DEBUG` allows one to track what's happening in the code. This is based on the functions `idfx::pushRegion()` and `idfx::popRegion()` embedded in the code.
 
-### Track down the bug with a debugger
-
-Let's use `gdb` (or `lldb` for those without gdb on macs):
-```shell
-gdb ./idefix
-```
-Then once in gdb, run the code and backtrace the error:
-```shell
-run
-bt
-```
-Depending on the compiler and the system, the error might happen at different places. It is usually close to the `SyncToDevice` method in `Setup::InitFlow`, defined in `setup.cpp`
-
-From there, you would think the Idefix is crap since the main source code is making segmentation faults. You'd be wrong!
-
 ### Use Kokkos bound check to nail it down
 
 When facing a segmentation fault on CPU, the first thing to check
@@ -78,7 +63,7 @@ is that you're not trying to read/write outside of an allocated array. This is n
 To enable this bound check, add the option to cmake during configuration:
 
 ```shell
-cmake $IDEFIX_DIR -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON
+cmake $IDEFIX_DIR -DIdefix_DEBUG=ON -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON
 ```
 
 then recompile and run
@@ -109,7 +94,7 @@ for(int k = 0; k < d.np_tot[KDIR] ; k++) {
 The second problem is a pure thermal diffusion problem where the gas is kept fixed with 0 velocity. This can be compiled and run *on your laptop*.
 
 ```shell
-cd idefix-tutorial/Debugging/problem2
+cd $IDEFIX_ROOT/tutorial/Debugging/problem2
 ```
 
 We then configure, compile and run the code
@@ -121,7 +106,7 @@ make -j 8
 
 And this runs beaufiully, congrats!
 
-Now, let's run this on a GPU. First follow the procedure describe in the [GPU tutorial](../GettingStarted/RunningOnGPUs.md) to connect to a compute node and set up your environement, clone the idefix-tutorial git repository, then go to the problem2 directory, configure for GPU, compile and run...
+Now, let's run this on a GPU. First follow the procedure describe in the [GPU tutorial](../GettingStarted/RunningOnGPUs.md) to configure and compile problem2 with cuda (hint: `cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON`) and run...
 
 ...and?
 
@@ -132,7 +117,7 @@ This is a typical example of a code that runs fine on a cpu but fails on GPU. Th
 As for problem 1, the first step is to enable the debugging in Idefix. To do this, let's call cmake again
 
 ```shell
-cmake $IDEFIX_DIR -DIdefix_DEBUG=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON
+cmake $IDEFIX_DIR -DIdefix_DEBUG=ON -DKokkos_ENABLE_CUDA=ON
 ```
 then recompile and run
 ```shell
@@ -230,12 +215,12 @@ This kind of bug is very common and very hard to track down sometimes. Actually,
 Let's move to problem 4, which is again a planet-disk interraction problem. This can be compiled and run *on your laptop* or on the Jureca cluster, but let's focus for now on the GPU version on the Jureca cluster (you can try to do the exercise on your laptop). First go to the right directory
 
 ```shell
-cd idefix-tutorial/Debugging/problem4
+cd $IDEFIX_ROOT/tutorial/Debugging/problem4
 ```
 
 We then configure
 ```shell
-cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON
+cmake $IDEFIX_DIR -DKokkos_ENABLE_CUDA=ON
 ```
 
 Then compile and run.
