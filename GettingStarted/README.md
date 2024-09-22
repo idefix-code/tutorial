@@ -14,7 +14,7 @@
 <a id="about"></a>
 # About this tutorial
 
-In this tutorial, you will learn how to use idefix on various architectures. Here, we will do everything through a Jupyter notebook opened on Jureca on the dc-gpu partition.
+In this tutorial, you will learn how to use idefix on various architectures. Here, we will do everything through a Jupyter notebook opened on Jureca on the `dc-gpu` partition.
 
 ## Deploy on Jureca
 
@@ -34,9 +34,12 @@ source /p/project1/training2437/tera_day2/idefix/env.sh
 
 and you're good to go!
 
-## Deploy on your machine (optional)
+## Optionnal: Deploy on your machine
 
-Optionnally, you can play around with this tutorial on your laptop/machine. In this case you can clone this tutorial and idefix source code on your machine, so that you can directly use these source files and test what you are doing. In the directory of your choice:
+<details> 
+<summary>Click here to deploy Idefix on your laptop.</summary>
+<br>
+Optionnally, you can play around with this tutorial on your laptop/machine. In this case you can clone this tutorial and idefix source code on your machine, so that you can directly use these source files and test what you are doing. In the directory of your choice (this requires an internet access):
 
 ```shell
 git clone --recurse-submodules https://github.com/idefix-code/idefix.git idefix.src
@@ -49,11 +52,22 @@ The last line allows you to reach the dedicated tutorial for Jureca.
 
 For conveniance, we set the `IDEFIX_DIR` environment variable to the absolute path of the root directory of idefix (as above). 
 
+If you intend to use the python script provided in this tutorial, best is to deploy a python environement with everything already set up. 
+We therefore create a python environement in the directory `$IDEFIX_DIR/test` with the right modules (this may require an internet access)
+
+```shell
+cd $IDEFIX_DIR/test
+python3 -m venv ./env
+source env/bin/activate
+pip install -r python_requirements.txt
+```
+
+</details>
+
 <a id="compilation"></a>
 ## Compile an example
 
-Go to the example directory.
-For instance:
+Let's play with a simple Sod shock tube test in hydro:
 
 ```shell
 cd $IDEFIX_DIR/test/HD/sod
@@ -95,7 +109,6 @@ files that are stored in the separate `idefix-code/reference` repository that is
 In order to check that our test produced the right result, we are going to use the script `testme.py`. 
 
 ```sell
-cd $IDEFIX_DIR/test/HD/sod
 ./testme.py -check
 ```
 
@@ -113,11 +126,19 @@ cmake $IDEFIX_DIR -DIdefix_MPI=ON
 make -j 8
 ```
 
-if your build is successful, you can now try to launch idefix with automatic domain decomposition:
+if your build is successful, you can now try to launch idefix with automatic domain decomposition. On a Jureca node (using Slurm):
 
 ```shell
 srun -n 4 ./idefix
 ```
+
+<details>
+<summary>(optional) On your laptop:</summary>
+
+```shell
+mpirun -np 4 ./idefix
+```
+</details>
 
 <a id="next"></a>
 # What next?
