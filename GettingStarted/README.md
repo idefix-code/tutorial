@@ -13,10 +13,27 @@
 <!-- tocstop -->
 <a id="about"></a>
 # About this tutorial
+This tutorial is provided as a github repository and is mirrored on Jureca for easier access. It is part of the [Toward Exascale-Ready Astrophysics workshop](https://indico3-jsc.fz-juelich.de/event/169/) and has been prepared by Geoffroy Lesur (geoffroy.lesur@univ-grenoble-alpes.fr)
 
 In this tutorial, you will learn how to use idefix on various architectures. Here, we will do everything through a Jupyter notebook opened on Jureca on the `dc-gpu` partition.
 
 ## Deploy on Jureca
+
+Log in to https://jupyter-jsc.fz-juelich.de/
+
+Open a lab environment with
+
+- Lab Config:
+    - System: JURECA
+    - Project: training2437
+    - Partition: dc-gpu
+    - Reservation: tera_day2
+- Resources (opens once dc-gpu is selected)
+    - Nodes: 1
+    - GPUs: 4
+    - Runtime: 90
+Kernels and extensions: keep defaults
+
 
 First open a new console on your Jupyter notebook. We then clone the idefix Github repository. Since we don't have direct access to the internet, we use a small script to copy the sources and the tutorial from a shared directory:
 

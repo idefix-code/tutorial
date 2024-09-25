@@ -1,17 +1,6 @@
 #include "idefix.hpp"
 #include "setup.hpp"
 
-/*********************************************/
-/**
-Customized random number generator
-Allow one to have consistent random numbers
-generators on different architectures.
-**/
-/*********************************************/
-
-
-// Default constructor
-
 
 // Initialisation routine. Can be used to allocate
 // Arrays or variables which are used later on

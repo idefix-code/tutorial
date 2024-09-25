@@ -53,7 +53,7 @@ Note that compilation for GPUs can take a looooooong time, so it is always recom
 You then simply launch the executable using srun:
 
 ```shell
-./idefix
+srun ./idefix
 ```
 
 You should see Idefix running and finishing rapidly its computation (you can compare the performances in cell/s to the ones you obtain on your laptop for instance for the same test). 
