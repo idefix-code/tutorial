@@ -1,0 +1,2 @@
+jupyter >= 1.1.1
+ipympl >= 0.10.0
